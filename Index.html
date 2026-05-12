@@ -20,19 +20,14 @@
             border-radius: 6px;
             overflow-x: auto;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 25px;
-        }
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #e1e4e8;
-            text-align: left;
-        }
-        th {
+        #cert-9d {
             background: #f6f8fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: 1px solid #e1e4e8;
         }
+
         .icon {
             width: 22px;
             vertical-align: middle;
@@ -47,10 +42,16 @@
             text-decoration: none;
             font-weight: bold;
             margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .download-btn:hover {
             background: #218838;
         }
+        .download-btn-container {
+            text-align: center;
+        }
+
         .meta {
             color: #6a737d;
             font-size: 0.9em;
@@ -60,11 +61,6 @@
 <body>
 
 <h1>🔐 Thomas‑PKI — CA‑Thoom</h1>
-
-<p class="meta">
-Les dates ci‑dessous sont calculées automatiquement à partir de la date de création des fichiers PEM.
-</p>
-
 <hr>
 
 <h2>📁 Architecture</h2>
@@ -97,92 +93,36 @@ Thomas-PKI/
 
 <hr>
 
-<h2>📅 Validité des certificats</h2>
-
-<table id="cert-table">
-    <thead>
-        <tr>
-            <th>Certificat</th>
-            <th>Créé le</th>
-            <th>Expire le</th>
-            <th>Validité</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
-
-<script>
-// Durées issues des .cnf
-const validity = {
-    root: 3650,
-    intermediate: 1825,
-    leaf: 182
-};
-
-const files = [
-    { path: "root-ecc/certs/root-cert.pem", label: "Root CA", days: validity.root },
-    { path: "intermediate-ecc/certs/intermediate-cert.pem", label: "Intermediate CA", days: validity.intermediate },
-    { path: "leafs/9A/9A-cert.pem", label: "Leaf 9A", days: validity.leaf },
-    { path: "leafs/9C/9C-cert.pem", label: "Leaf 9C", days: validity.leaf },
-    { path: "leafs/9D/9D-cert.pem", label: "Leaf 9D (S/MIME)", days: validity.leaf },
-    { path: "leafs/9E/9E-cert.pem", label: "Leaf 9E (SSH)", days: validity.leaf }
-];
-
-function formatDate(d) {
-    return d.toISOString().split("T")[0];
-}
-
-async function loadDates() {
-    const tbody = document.querySelector("#cert-table tbody");
-
-    for (const f of files) {
-        try {
-            const response = await fetch(f.path, { method: "HEAD" });
-            const lastMod = response.headers.get("Last-Modified");
-            if (!lastMod) continue;
-
-            const created = new Date(lastMod);
-            const expires = new Date(created.getTime() + f.days * 86400000);
-
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${f.label}</td>
-                <td>${formatDate(created)}</td>
-                <td>${formatDate(expires)}</td>
-                <td>${f.days} jours</td>
-            `;
-            tbody.appendChild(row);
-
-        } catch (e) {
-            console.error("Erreur pour", f.path, e);
-        }
-    }
-}
-
-loadDates();
-</script>
-
+<h2>📥 Télécharger mon certificat S/MIME</h2>
+<div id="cert-9d">
+    <p>
+    Ce certificat (slot 9D) permet :
+    </p>
+    <ul>
+        <li>la signature d’emails (S/MIME)</li>
+        <li>le chiffrement d’emails</li>
+        <li>le déchiffrement des messages reçus</li>
+    </ul>
+</div>
 <hr>
 
-<h2>📥 Télécharger mon certificat S/MIME</h2>
+<h2>📅 Validité du certificat Email S/SMIME</h2>
+<div id="cert-9d"></div>
+<script>
+fetch("leafs/9d/certificate.html")
+.then(r => r.text())
+.then(html => document.getElementById("cert-9d").innerHTML = html);  
+</script>
 
-<p>
-Ce certificat (slot 9D) permet :
-</p>
-
-<ul>
-    <li>la signature d’emails (S/MIME)</li>
-    <li>le chiffrement d’emails</li>
-    <li>le déchiffrement des messages reçus</li>
-</ul>
-
-<a class="download-btn" href="leafs/9D/9D-cert.pem">
-    <svg class="icon" viewBox="0 0 16 16" fill="white">
-        <path d="M7.5 1v8.793L4.354 6.646l-.708.708L8 11.707l4.354-4.353-.708-.708L8.5 9.793V1h-1z"/>
-        <path d="M3 13v1h10v-1H3z"/>
-    </svg>
-    Télécharger le certificat S/MIME (9D)
-</a>
+<div class="download-btn-container">
+    <a class="download-btn" href="leafs/9d/9d-cert.pem">
+        <svg class="icon" viewBox="0 0 16 16" fill="white">
+            <path d="M7.5 1v8.793L4.354 6.646l-.708.708L8 11.707l4.354-4.353-.708-.708L8.5 9.793V1h-1z"/>
+            <path d="M3 13v1h10v-1H3z"/>
+        </svg>
+        Télécharger le certificat S/MIME (9D)
+    </a>
+</div>
 
 <hr>
 
