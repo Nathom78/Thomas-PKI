@@ -1,4 +1,4 @@
-name: Update 9D Certificate Validity
+name: Update 9d Certificate Validity
 
 on:
   push:
@@ -15,8 +15,8 @@ jobs:
       - name: Extract NotBefore / NotAfter from 9D certificate
         id: extract
         run: |
-          NB=$(openssl x509 -in leafs/9D/9D-cert.pem -noout -startdate | cut -d= -f2)
-          NA=$(openssl x509 -in leafs/9D/9D-cert.pem -noout -enddate | cut -d= -f2)
+          NB=$(openssl x509 -in leafs/9d/9d-cert.pem -noout -startdate | cut -d= -f2)
+          NA=$(openssl x509 -in leafs/9d/9d-cert.pem -noout -enddate | cut -d= -f2)
 
           NB_ISO=$(date -d "$NB" +"%Y-%m-%d")
           NA_ISO=$(date -d "$NA" +"%Y-%m-%d")
@@ -26,7 +26,7 @@ jobs:
 
       - name: Generate certificate.html
         run: |
-          cat > leafs/9D/certificate.html <<EOF
+          cat > leafs/9d/certificate.html <<EOF
           <p><strong>Not Before :</strong> ${{ steps.extract.outputs.not_before }}</p>
           <p><strong>Not After :</strong> ${{ steps.extract.outputs.not_after }}</p>
           EOF
@@ -36,5 +36,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add leafs/9D/certificate.html
-          git commit -m "Update 9D certificate validity" || echo "No changes"
+          git commit -m "Update 9d certificate validity" || echo "No changes"
           git push
