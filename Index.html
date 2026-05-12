@@ -20,7 +20,7 @@
             border-radius: 6px;
             overflow-x: auto;
         }
-        #cert-9d {
+        .cert {
             background: #f6f8fa;
             padding: 10px;
             border-radius: 6px;
@@ -94,7 +94,7 @@ Thomas-PKI/
 <hr>
 
 <h2>📥 Télécharger mon certificat S/MIME</h2>
-<div id="cert-9d">
+<div class="cert">
     <p>
     Ce certificat (slot 9D) permet :
     </p>
@@ -107,7 +107,7 @@ Thomas-PKI/
 <hr>
 
 <h2>📅 Validité du certificat Email S/SMIME</h2>
-<div id="cert-9d"></div>
+<div id="cert-9d" class="cert"></div>
 <script>
 fetch("leafs/9d/certificate.html")
 .then(r => r.text())
