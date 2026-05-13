@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
   "color": "blue",
-  "label": "CRL Last Update",
-  "message": "2026-05-11"
+  "schemaVersion": 1,
+  "message": "2026-05-13",
+  "label": "CRL Last Update"
 }
