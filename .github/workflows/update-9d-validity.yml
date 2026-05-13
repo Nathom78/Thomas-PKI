@@ -29,12 +29,35 @@ jobs:
           echo "not_before=$NB_ISO" >> $GITHUB_OUTPUT
           echo "not_after=$NA_ISO" >> $GITHUB_OUTPUT
 
-      - name: Generate certificate.html
+      - name: Generate new certificate.html
         run: |
-          cat > leafs/9d/certificate.html <<EOF
+          cat > leafs/9d/certificate.new.html <<EOF
           <p><strong>Not Before :</strong> ${{ steps.extract.outputs.not_before }}</p>
           <p><strong>Not After :</strong> ${{ steps.extract.outputs.not_after }}</p>
           EOF
+
+      - name: Compare with existing certificate.html
+        id: compare
+        run: |
+          if cmp -s leafs/9d/certificate.new.html leafs/9d/certificate.html; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Replace old file if changed
+        if: steps.compare.outputs.changed == 'true'
+        run: |
+          mv leafs/9d/certificate.new.html leafs/9d/certificate.html
+
+      - name: Commit updated certificate.html
+        if: steps.compare.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add leafs/9d/certificate.html
+          git commit -m "Update 9D certificate validity"
+          git push
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
